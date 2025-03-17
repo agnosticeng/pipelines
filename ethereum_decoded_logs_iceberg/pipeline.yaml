@@ -20,7 +20,7 @@ Engine:
 
 Init:
   Queries:
-    - init_start.sql#ignore-failure=true
+    - init_start.sql
     
 Source:
   Query: source.sql
