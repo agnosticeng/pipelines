@@ -19,7 +19,11 @@ with
     (
         select 
             groupUniqArray(_file)
-        from iceberg('https://s3.rbx.io.cloud.ovh.net/agnostic-data-ice-ethereum-mainnet/decoded_logs')
+        from iceberg(
+            '{{.ICEBERG_TABLE_LOCATION}}',
+            '{{.S3_ACCESS_KEY_ID}}',
+            '{{.S3_SECRET_ACCESS_KEY}}'
+        )
     ) as files,
 
     (
@@ -41,7 +45,7 @@ with
                     )
                 )
             )
-        from s3(url_pat, 'ParquetMetadata')
+        from s3(url_pat, '{{.S3_ACCESS_KEY_ID}}', '{{.S3_SECRET_ACCESS_KEY}}', 'ParquetMetadata')
     ) as max
 
 select
