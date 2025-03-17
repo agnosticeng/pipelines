@@ -53,3 +53,7 @@ select
         max + 1,
         {{.DEFAULT_START}}
     ) as INIT_START
+
+settings
+    max_threads=1,
+    remote_filesystem_read_prefetch=0
