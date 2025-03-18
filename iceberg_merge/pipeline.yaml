@@ -1,8 +1,7 @@
 Engine:
   Local:
     Bundles:
-      - https://github.com/agnosticeng/agnostic-clickhouse-udf/releases/download/v0.0.14/agnostic-clickhouse-udf_0.0.14_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
-      # - https://github.com/agnosticeng/icepq/releases/download/v0.0.4/icepq_clickhouse_udf_bundle_0.0.4_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
+      - file://../agnostic-clickhouse-udf/tmp/bundle.tar.gz
       - file://../icepq/tmp/bundle.tar.gz#disable-cache=true
     Settings:
       allow_experimental_dynamic_type: 1
@@ -12,7 +11,7 @@ Engine:
       enable_dynamic_type: 1
       schema_inference_make_columns_nullable: auto
       remote_filesystem_read_prefetch: 0
-      input_format_parquet_use_native_reader: 1
+      input_format_parquet_use_native_reader: 0
       output_format_parquet_string_as_string: 0
       output_format_parquet_use_custom_encoder: 1
       output_format_parquet_write_page_index: 1
@@ -20,46 +19,42 @@ Engine:
       output_format_parquet_parallel_encoding: 0
       max_execution_time: 3600
       max_bytes_ratio_before_external_group_by: 0.01
-      max_bytes_before_external_group_by: 128MB
+      max_bytes_before_external_group_by: 134217728
       max_bytes_ratio_before_external_sort: 0.01
-      max_bytes_before_external_sort: 128MB
+      max_bytes_before_external_sort: 134217728
       s3_max_connections: 50
 
 Init:
   Queries:
-    - init_start.sql
-  ClickhouseSettings:
-    max_threads: 4
-    max_download_buffer_size: 1048576
-    
+    - init.sql
+  StopAfter: 1
+
 Source:
   Query: source.sql
   StopOnEmpty: true
 
 Processors:
-  - Map: 
+  - Debug:
+      Pretty: true
+  - Map:
       Queries:
-        - create_buffer.sql
-    Workers: 1
-    ClickhouseSettings:
-      max_threads: 2
-  - Seq: {}
-  - Batch:
-      Queries:
-        - merge_buffers.sql
-      SizeQuery: buffers_size.sql
-      MaxWait: 120s
-      MaxSize: 100000000
-  - Map: 
-      Queries:
-        - write_parquet_file.sql
-        - append_to_table.sql
-        - delete_buffers.sql
+        - merge_files.sql
       ClickhouseSettings:
         max_threads: 1
+        s3_max_inflight_parts_for_one_file: 1
+        s3_max_upload_part_size: 67108864
+
         # s3_allow_parallel_part_upload=0,
         # s3_max_inflight_parts_for_one_file=1,
         # s3_max_upload_part_size=67108864,
         # max_block_size=32768,
         # min_insert_block_size_rows=0,
         # min_insert_block_size_bytes=33554432
+  - Batch:
+      Queries:
+        - merge_merges.sql
+  - Debug:
+      Pretty: true 
+  - Map: 
+      Queries:
+        - merge_table.sql
