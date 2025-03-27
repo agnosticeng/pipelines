@@ -9,7 +9,7 @@
 --     '{{.S3_SECRET_ACCESS_KEY}}'
 -- )
 
--- While the above query is very natural an easy, unfortunately it is very slow.
+-- While the above query is very natural an simple, unfortunately it is very slow.
 -- As of today, ClickHouse cannot yet make use of Iceberg & Parquet min/max statitics to answer queries.
 -- Thus, the above query scan the full block_number columns of every Parquet file in the last table snapshot.
 -- Until these optimizations are implemented, we will resort to a dirty (but cool) trick of reading Parquet files 
@@ -27,11 +27,15 @@ with
     ) as files,
 
     (
-        select 
-            'https://s3.rbx.io.cloud.ovh.net/agnostic-data-ice-ethereum-mainnet/decoded_logs' ||
-            '/data/{' ||
-            arrayStringConcat(files, ',') ||
-            '}'
+        if (
+            length(files) = 1,
+            toString(files[1]),
+            '{' || arrayStringConcat(files, ',') || '}'
+        )
+    ) as files_pat,
+
+    (
+        select '{{.ICEBERG_TABLE_LOCATION}}' || '/data/' || files_pat
     ) as url_pat,
 
     (
