@@ -1,3 +1,5 @@
+{{define "source"}}
+
 with 
     {{.MAX_BATCH_SIZE | default "1000"}} as max_batch_size,
     {{.MAX_BATCH_PER_RUN | default "10"}} as max_batch_per_run,
@@ -13,11 +15,11 @@ with
         where block_number > {{.TIP_MIN | default "0"}}
     ) as tip,
 
-    (
-        coalesce(
-            {{.RANGE_END | default "null"}} + 1,
-            {{coalesce .INIT_START .DEFAULT_START 0}}
-        )
+    coalesce(
+        {{.RANGE_END | default "null"}} + 1,
+        {{.INIT_START | default "null"}},
+        {{.DEFAULT_START | default "null"}},
+        0
     ) as start
 
 select 
@@ -29,3 +31,5 @@ from generate_series(
     toUInt64(max_batch_size)
 )
 limit max_batch_per_run
+
+{{end}}

@@ -2,7 +2,7 @@ Engine:
   Local:
     Bundles:
       - https://github.com/agnosticeng/agnostic-clickhouse-udf/releases/download/v0.0.16/agnostic-clickhouse-udf_0.0.16_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
-      - https://github.com/agnosticeng/icepq/releases/download/v0.0.6/icepq_clickhouse_udf_bundle_0.0.6_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
+      - https://github.com/agnosticeng/icepq/releases/download/v0.0.7/icepq_clickhouse_udf_bundle_0.0.7_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
     Settings:
       allow_experimental_dynamic_type: 1
       enable_named_columns_in_function_tuple: 1
@@ -27,42 +27,49 @@ Engine:
 
 Init:
   Queries:
-    - init_evm_abi_decoding.sql
-    - init_create_source.sql
-    - init_start.sql#ignore-error-codes=107 
+    - init_source
+    - init_evm_abi_decoding
+    - init_start#ignore-error-codes=107 
   ClickhouseSettings:
     max_threads: 4
     max_download_buffer_size: 1048576
     
 Source:
-  Query: source.sql
+  Query: source
   StopOnEmpty: true
 
 Processors:
-  - Map: 
+  - Apply: 
       Queries:
-        - create_buffer.sql
-    Workers: 1
-    ClickhouseSettings:
-      max_threads: 2
-  - Seq: {}
-  - Batch:
+        - fetch_range
+
+  - Sequence: {}
+
+  - Accumulate:
+      Setup: create_buffer
       Queries:
-        - merge_buffers.sql
-      SizeQuery: buffers_size.sql
+        - insert_into_buffer
+        - drop_range
+        - output_merged_range_vars
+      SizeQuery: buffer_size
+      Teardown: rename_buffer
       MaxWait: 300s
       MaxSize: 1000000000
-  - Map: 
+
+  - Apply: 
       Queries:
-        - write_parquet_file.sql
-        - append_to_table.sql
-        - delete_buffers.sql
+        - write_parquet_file
+        - append_to_iceberg_table
+        - drop_buffer
       ClickhouseSettings:
         max_threads: 1
         max_insert_threads: 1
         max_block_size: 32768
         min_insert_block_size_rows: 0
         min_insert_block_size_bytes: 33554432
+
+
+
 
 
 

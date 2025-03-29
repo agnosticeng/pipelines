@@ -1,4 +1,6 @@
-create table buffer_{{.RANGE_START}}_{{.RANGE_END}} engine=StripeLog
+{{define "fetch_range"}}
+
+create table range_{{.RANGE_START}}_{{.RANGE_END}} engine=StripeLog
 as (
     with
         q0 as (
@@ -35,6 +37,7 @@ as (
 
 
     select
+        toDate(timestamp) as date,
         * except (evt),
         evt.value.signature::String as signature,
         evt.value.fullsig::String as fullsig,
@@ -42,3 +45,5 @@ as (
     from q1
     where evt.error is null
 )
+
+{{end}}

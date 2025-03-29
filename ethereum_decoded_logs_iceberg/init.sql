@@ -1,3 +1,30 @@
+{{define "init_source"}}
+
+create table source as remote(
+    '{{.CH_HOST}}', 
+    {{.CH_DATABASE | default "default"}}, 
+    {{.CH_TABLE}},
+    '{{.CH_USER | default "default"}}',
+    '{{.CH_PASSWD | default ""}}'
+)
+
+{{end}}
+
+{{define "init_evm_abi_decoding"}}
+
+create dictionary evm_abi_decoding (
+    selector String,
+    fullsigs Array(String)
+)
+primary key selector
+source(http(url '{{.EVM_ABI_DECODING_URL}}' format 'Parquet'))
+lifetime(min 3600 max 7200)
+layout(hashed())
+
+{{end}}
+
+{{define "init_start"}}
+
 -- select 
 --     coalesce(
 --         maxOrNull(block_number) + 1,
@@ -19,11 +46,7 @@ with
     (
         select 
             groupUniqArray(_file)
-        from iceberg(
-            '{{.ICEBERG_TABLE_LOCATION}}',
-            '{{.S3_ACCESS_KEY_ID}}',
-            '{{.S3_SECRET_ACCESS_KEY}}'
-        )
+        from iceberg('{{.ICEBERG_TABLE_LOCATION}}')
     ) as files,
 
     (
@@ -40,7 +63,7 @@ with
 
     (
        select
-            maxOrNull(
+            max(
                 arrayMax(
                     x -> toUInt64(x.statistics.max),
                     arrayFilter(
@@ -49,11 +72,9 @@ with
                     )
                 )
             )
-        from s3(url_pat, '{{.S3_ACCESS_KEY_ID}}', '{{.S3_SECRET_ACCESS_KEY}}', 'ParquetMetadata')
+        from s3(url_pat, 'ParquetMetadata')
     ) as max
 
-select
-    coalesce(
-        max + 1,
-        {{.DEFAULT_START}}
-    ) as INIT_START
+select assumeNotNull(max + 1) as INIT_START
+
+{{end}}
