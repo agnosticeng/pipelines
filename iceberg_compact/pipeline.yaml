@@ -24,6 +24,7 @@ Engine:
       max_bytes_before_external_sort: 1
       s3_max_connections: 50
       default_temporary_table_engine: Log
+      read_timeout: 900s
 
 Init:
   Queries:
