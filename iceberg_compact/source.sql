@@ -1,3 +1,5 @@
+{{define "source"}}
+
 with 
     {{.MAX_INPUT_FILES | default "10"}} as max_input_files,
     {{.MAX_MERGE_OUTPUT_SIZE | default "10737418240"}} as max_output_size, -- default=10GB
@@ -33,3 +35,5 @@ order by length(input_files) desc, arraySum(arrayMap(x -> assumeNotNull(x.size),
 limit 1
 
 settings enable_named_columns_in_function_tuple=1
+
+{{end}}

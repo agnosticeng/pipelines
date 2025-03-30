@@ -27,19 +27,21 @@ Engine:
 
 Init:
   Queries:
-    - init.sql
+    - init_table_files
+  ClickhouseSettings:
+    max_threads: 1
 
 Source:
-  Query: source.sql
+  Query: source
   StopOnEmpty: true
 
 Processors:
   - Debug:
       Pretty: true
-  - Map:
+  - Apply:
       Queries:
-        - import_files.sql
-        - write_parquet_file.sql
+        - import_parquet_files
+        - export_merged_parquet_file
       ClickhouseSettings:
         max_threads: 1
         max_insert_threads: 1
@@ -48,12 +50,12 @@ Processors:
         max_block_size: 32768
         min_insert_block_size_rows: 0
         min_insert_block_size_bytes: 33554432
-  - Batch:
+  - Accumulate:
       Queries:
-        - merge_merges.sql
+        - batch_merges
       MaxSize: 1
   - Debug:
       Pretty: true 
-  - Map: 
+  - Apply: 
       Queries:
-        - merge_table.sql
+        - iceberg_tx.sql

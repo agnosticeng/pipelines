@@ -1,3 +1,5 @@
+{{define "batch_merges"}}
+
 select
     arrayPushBack(
         {{.LEFT.MERGES | default list | toCH}},
@@ -6,3 +8,5 @@ select
             {{.RIGHT.INPUT_FILES | toCH}}
         )
     ) as MERGES
+
+{{end}}
