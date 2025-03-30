@@ -1,12 +1,13 @@
 {{define "batch_merges"}}
 
 select
+    arrayConcat(
+        {{.LEFT.INPUT_FILES | default list | toCH}},
+        {{.RIGHT.INPUT_FILES | toCH}}
+    ) as INPUT_FILES,
     arrayPushBack(
-        {{.LEFT.MERGES | default list | toCH}},
-        arrayConcat(
-            [{{.RIGHT.OUTPUT_FILE | toCH}}],
-            {{.RIGHT.INPUT_FILES | toCH}}
-        )
-    ) as MERGES
+        {{.LEFT.OUTPUT_FILES | default list | toCH}},
+        {{.RIGHT.OUTPUT_FILE | toCH}}
+    ) as OUTPUT_FILES
 
 {{end}}

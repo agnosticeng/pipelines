@@ -1,5 +1,5 @@
-{{define "iceberg_tx"}}
+{{define "iceberg_commit"}}
 
-select icepq_merge('s3:/' || path('{{.TABLE_LOCATION}}'), {{.MERGES | toCH}})
+select icepq_replace('s3:/' || path('{{.TABLE_LOCATION}}'), {{.INPUT_FILES | toCH}}, {{.OUTPUT_FILES | toCH}})
 
 {{end}}
