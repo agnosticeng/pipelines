@@ -59,7 +59,7 @@ Processors:
   - Apply: 
       Queries:
         - write_parquet_file
-        - append_to_iceberg_table
+        - iceberg_commit
         - drop_buffer
       ClickhouseSettings:
         max_threads: 1

@@ -18,3 +18,9 @@ select * from import_{{.TASK_ID}}
 order by {{.ORDER_BY}}
 
 {{end}}
+
+{{define "drop_import_table"}}
+
+drop table import_{{.TASK_ID}} sync 
+
+{{end}}

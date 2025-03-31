@@ -6,7 +6,7 @@ order by {{.ORDER_BY}}
 
 {{end}}
 
-{{define "append_to_iceberg_table"}}
+{{define "iceberg_commit"}}
 
 select icepq_append(concat('s3:/', path('{{.ICEBERG_TABLE_LOCATION}}')), ['{{.OUTPUT_FILE}}'])
 
@@ -14,6 +14,6 @@ select icepq_append(concat('s3:/', path('{{.ICEBERG_TABLE_LOCATION}}')), ['{{.OU
 
 {{define "drop_buffer"}}
 
-drop table buffer_{{.RANGE_START}}_{{.RANGE_END}}
+drop table buffer_{{.RANGE_START}}_{{.RANGE_END}} sync
 
 {{end}}
