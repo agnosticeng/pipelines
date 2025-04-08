@@ -8,7 +8,7 @@ order by {{.ORDER_BY}}
 
 {{define "iceberg_commit"}}
 
-select icepq_append(concat('s3:/', path('{{.ICEBERG_TABLE_LOCATION}}')), ['{{.OUTPUT_FILE}}'])
+select icepq_add(concat('s3:/', path('{{.ICEBERG_TABLE_LOCATION}}')), ['{{.OUTPUT_FILE}}'])
 
 {{end}}
 
