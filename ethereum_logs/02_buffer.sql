@@ -3,6 +3,7 @@
 create table buffer as range_{{.RANGE_START}}_{{.RANGE_END}}
 engine = MergeTree 
 order by {{.ORDER_BY}}
+settings old_parts_lifetime=10
 
 {{end}}
 
