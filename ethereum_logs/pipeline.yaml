@@ -35,6 +35,7 @@ Processors:
   - Apply: 
       Queries:
         - fetch_range
+    Workers: 2
 
   - Sequence: {}
 
