@@ -36,6 +36,7 @@ Processors:
   - Apply: 
       Queries:
         - fetch_range
+    Workers: 4
 
   - Sequence: {}
 
@@ -48,7 +49,7 @@ Processors:
       Size: buffer_size
       Teardown: rename_buffer
       MaxWait: 300s
-      MaxSize: 1000000
+      MaxSize: 100000000
 
   - Apply: 
       Queries:
