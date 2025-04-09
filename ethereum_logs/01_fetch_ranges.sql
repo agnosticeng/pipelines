@@ -1,6 +1,6 @@
 {{define "fetch_range"}}
 
-create table range_{{.RANGE_START}}_{{.RANGE_END}} engine=Memory
+create table range_{{.RANGE_START}}_{{.RANGE_END}} engine=Memory settings old_parts_lifetime=10
 as (
     with
         {{.RANGE_START}} as start,
