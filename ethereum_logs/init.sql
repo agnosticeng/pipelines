@@ -25,7 +25,7 @@ with
                 arrayMax(
                     x -> toUInt64(x.statistics.max),
                     arrayFilter(
-                        x -> x.name = 'number', 
+                        x -> x.name = 'block_number', 
                         arrayFlatten(row_groups.columns)
                     )
                 )
