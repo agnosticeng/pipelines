@@ -1,6 +1,6 @@
 {{define "fetch_range"}}
 
-create table range_{{.RANGE_START}}_{{.RANGE_END}} engine=StripeLog
+create table range_{{.RANGE_START}}_{{.RANGE_END}} engine=Memory
 as (
     with
         block_numbers as (
