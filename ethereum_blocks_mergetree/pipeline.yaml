@@ -1,0 +1,54 @@
+Engine:
+  Local:
+    Bundles:
+      - https://github.com/agnosticeng/clickhouse-evm/releases/download/v0.0.17/clickhouse-evm_0.0.17_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
+    Settings:
+      enable_named_columns_in_function_tuple: 1
+      send_logs_level: warning
+      enable_json_type: 1
+      enable_dynamic_type: 1
+      max_execution_time: 3600
+      max_bytes_ratio_before_external_group_by: 0.1
+      max_bytes_before_external_group_by: 0
+      max_bytes_ratio_before_external_sort: 0.1
+      max_bytes_before_external_sort: 0
+
+Init:
+  Queries:
+    - init_sink
+    - init_start#ignore-error-codes=107 
+    
+Source:
+  Query: source
+  StopOnEmpty: false
+
+Processors:
+  - Apply: 
+      Queries:
+        - fetch_range
+      Workers: 4
+
+  - Sequence: {}
+
+  - Accumulate:
+      Setup: create_buffer
+      Size: buffer_size
+      Teardown: rename_buffer
+      Queries:
+        - insert_into_buffer
+        - drop_range
+        - output_merged_range_vars
+      MaxWait: 300s
+      MaxSize: 200000
+
+  - Apply:
+      Queries:
+        - write_to_sink
+        - drop_buffer
+
+
+
+
+
+
+

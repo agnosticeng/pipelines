@@ -51,7 +51,7 @@ Processors:
         - insert_into_buffer
         - drop_range
         - output_merged_range_vars
-      SizeQuery: buffer_size
+      Size: buffer_size
       Teardown: rename_buffer
       MaxWait: 300s
       MaxSize: 1000000000
