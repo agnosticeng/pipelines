@@ -25,8 +25,7 @@ Init:
   Queries:
     - init_start#ignore-error-codes=107 
   ClickhouseSettings:
-    max_threads: 4
-    max_download_buffer_size: 1048576
+    input_format_parquet_use_native_reader: 1
     
 Source:
   Query: source
@@ -49,6 +48,12 @@ Processors:
       Teardown: rename_buffer
       MaxWait: 300s
       MaxSize: 100000000
+      ClickhouseSettings:
+        max_threads: 1
+        max_insert_threads: 1
+        max_block_size: 32768
+        min_insert_block_size_rows: 0
+        min_insert_block_size_bytes: 33554432
 
   - Apply: 
       Queries:
