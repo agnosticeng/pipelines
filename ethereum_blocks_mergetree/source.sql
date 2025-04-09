@@ -30,9 +30,12 @@ with
 
 select 
     generate_series as RANGE_START,
-    arrayMin([assumeNotNull(tip), toUInt64(generate_series + max_batch_size - 1)]) as RANGE_END
+    least(
+        assumeNotNull(tip), 
+        toUInt64(generate_series + max_batch_size - 1)
+    ) as RANGE_END
 from generate_series(
-    toUInt64(coalesce(start, 0)),
+    toUInt64(assumeNotNull(start)),
     assumeNotNull(tip),
     toUInt64(max_batch_size)
 )

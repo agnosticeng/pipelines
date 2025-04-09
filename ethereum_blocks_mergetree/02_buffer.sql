@@ -2,7 +2,7 @@
 
 create table buffer as range_{{.RANGE_START}}_{{.RANGE_END}}
 engine = MergeTree 
-order by tuple()
+order by {{.ORDER_BY}}
 
 {{end}}
 
@@ -29,7 +29,8 @@ select
     greatest(
         {{.LEFT.RANGE_END | default "0"}}, 
         {{.RIGHT.RANGE_END}}
-    ) as RANGE_END
+    ) as RANGE_END,
+    generateUUIDv7() || '.parquet' as OUTPUT_FILE
 
 {{end}}
 

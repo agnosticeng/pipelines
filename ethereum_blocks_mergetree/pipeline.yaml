@@ -2,52 +2,65 @@ Engine:
   Local:
     Bundles:
       - https://github.com/agnosticeng/clickhouse-evm/releases/download/v0.0.17/clickhouse-evm_0.0.17_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
+      - https://github.com/agnosticeng/icepq/releases/download/v0.0.8/icepq_clickhouse_udf_bundle_0.0.8_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
     Settings:
-      enable_named_columns_in_function_tuple: 1
       send_logs_level: warning
-      enable_json_type: 1
+      allow_experimental_dynamic_type: 1
+      allow_experimental_json_type: 1
       enable_dynamic_type: 1
+      enable_json_type: 1
+      enable_named_columns_in_function_tuple: 1
+      schema_inference_make_columns_nullable: auto
+      remote_filesystem_read_prefetch: 0
+      input_format_parquet_use_native_reader: 1
+      output_format_parquet_string_as_string: 0
+      output_format_parquet_use_custom_encoder: 1
+      output_format_parquet_write_page_index: 1
+      output_format_parquet_write_bloom_filter: 1
+      output_format_parquet_parallel_encoding: 0
       max_execution_time: 3600
-      max_bytes_ratio_before_external_group_by: 0.1
-      max_bytes_before_external_group_by: 0
-      max_bytes_ratio_before_external_sort: 0.1
-      max_bytes_before_external_sort: 0
+      s3_max_connections: 50
 
 Init:
   Queries:
-    - init_sink
     - init_start#ignore-error-codes=107 
+  ClickhouseSettings:
+    max_threads: 4
+    max_download_buffer_size: 1048576
     
 Source:
   Query: source
-  StopOnEmpty: false
+  StopOnEmpty: true
 
 Processors:
   - Apply: 
       Queries:
         - fetch_range
-      Workers: 4
 
   - Sequence: {}
 
   - Accumulate:
       Setup: create_buffer
-      Size: buffer_size
-      Teardown: rename_buffer
       Queries:
         - insert_into_buffer
         - drop_range
         - output_merged_range_vars
-      MaxWait: 120s
-      MaxSize: 200000
+      Size: buffer_size
+      Teardown: rename_buffer
+      MaxWait: 300s
+      MaxSize: 1000000
 
-  - Apply:
+  - Apply: 
       Queries:
-        - write_to_sink
+        - write_parquet_file
+        - iceberg_commit
         - drop_buffer
-
-
-
+      ClickhouseSettings:
+        max_threads: 1
+        max_insert_threads: 1
+        max_block_size: 32768
+        min_insert_block_size_rows: 0
+        min_insert_block_size_bytes: 33554432
 
 
 

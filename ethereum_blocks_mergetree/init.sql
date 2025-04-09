@@ -1,19 +1,38 @@
-{{define "init_sink"}}
-
-create table sink as remote(
-    '{{.CH_HOST}}', 
-    {{.CH_DATABASE | default "default"}}, 
-    {{.CH_TABLE}},
-    '{{.CH_USER | default "default"}}',
-    '{{.CH_PASSWD | default ""}}'
-)
-
-{{end}}
-
 {{define "init_start"}}
 
-select 
-    maxOrNull(number) + 1 as INIT_START
-from sink
+with 
+    (
+        select 
+            groupUniqArray(_file)
+        from iceberg('{{.ICEBERG_DESTINATION_TABLE_LOCATION}}')
+    ) as files,
+
+    (
+        if (
+            length(files) = 1,
+            toString(files[1]),
+            '{' || arrayStringConcat(files, ',') || '}'
+        )
+    ) as files_pat,
+
+    (
+        select '{{.ICEBERG_DESTINATION_TABLE_LOCATION}}' || '/data/' || files_pat
+    ) as url_pat,
+
+    (
+       select
+            max(
+                arrayMax(
+                    x -> toUInt64(x.statistics.max),
+                    arrayFilter(
+                        x -> x.name = 'number', 
+                        arrayFlatten(row_groups.columns)
+                    )
+                )
+            )
+        from s3(url_pat, 'ParquetMetadata')
+    ) as max
+
+select max + 1 as INIT_START
 
 {{end}}
