@@ -46,7 +46,7 @@ Processors:
         - output_merged_range_vars
       Size: buffer_size
       Teardown: rename_buffer
-      MaxWait: 300s
+      MaxWait: 900s
       MaxSize: 100000000
       ClickhouseSettings:
         max_threads: 1
