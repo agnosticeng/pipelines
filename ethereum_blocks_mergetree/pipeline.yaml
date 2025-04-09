@@ -38,7 +38,7 @@ Processors:
         - insert_into_buffer
         - drop_range
         - output_merged_range_vars
-      MaxWait: 300s
+      MaxWait: 120s
       MaxSize: 200000
 
   - Apply:
