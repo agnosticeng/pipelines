@@ -8,6 +8,7 @@ as (
         * 
     from s3('{{.TABLE_LOCATION}}/data/{' || arrayStringConcat({{.INPUT_FILES | toClickHouseLiteral}}, ',') || '}') 
 )
+settings old_parts_lifetime=10
 
 {{end}}
 
