@@ -20,6 +20,11 @@ Engine:
       output_format_parquet_parallel_encoding: 0
       max_execution_time: 3600
       s3_max_connections: 50
+      max_bytes_ratio_before_external_group_by: 0.01
+      max_bytes_before_external_group_by: 1
+      max_bytes_ratio_before_external_sort: 0.01
+      max_bytes_before_external_sort: 1
+      default_temporary_table_engine: StripeLog
 
 Init:
   Queries:
