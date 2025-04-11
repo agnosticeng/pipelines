@@ -19,29 +19,23 @@ Engine:
       output_format_parquet_write_bloom_filter: 1
       output_format_parquet_parallel_encoding: 0
       max_execution_time: 3600
-      max_bytes_ratio_before_external_group_by: 0.01
-      max_bytes_before_external_group_by: 1
-      max_bytes_ratio_before_external_sort: 0.01
-      max_bytes_before_external_sort: 1
-      default_temporary_table_engine: StripeLog
-      
+      s3_max_connections: 50
+
 Init:
   Queries:
-    - init_evm_abi_decoding
     - init_start#ignore-error-codes=107 
+  ClickhouseSettings:
+    input_format_parquet_use_native_reader: 1
     
 Source:
   Query: source
-  StopAfter: 1
+  StopOnEmpty: true
 
 Processors:
   - Apply: 
       Queries:
         - fetch_range
-      ClickhouseSettings:
-        remote_filesystem_read_prefetch: 1
-        input_format_parquet_use_native_reader: 0
-    Workers: 8
+    Workers: 2
 
   - Sequence: {}
 
