@@ -3,12 +3,12 @@
 create table import_{{.TASK_ID}}
 engine=MergeTree
 order by {{.ORDER_BY}}
+settings old_parts_lifetime=10
 as (
     select
         * 
     from s3('{{.TABLE_LOCATION}}/data/{' || arrayStringConcat({{.INPUT_FILES | toClickHouseLiteral}}, ',') || '}') 
 )
-settings old_parts_lifetime=10
 
 {{end}}
 
