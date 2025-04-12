@@ -1,7 +1,7 @@
 {{define "source"}}
 
 with 
-    {{.MAX_INPUT_FILES | default "2"}} as max_input_files,
+    {{.MAX_INPUT_FILES | default "25"}} as max_input_files,
     {{.MAX_MERGE_OUTPUT_SIZE | default "10737418240"}} as max_output_size, -- default=10GB
 
     q0 as (
