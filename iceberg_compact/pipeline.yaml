@@ -2,8 +2,7 @@ Engine:
   Local:
     Bundles:
       - https://github.com/agnosticeng/clickhouse-evm/releases/download/v0.0.17/clickhouse-evm_0.0.17_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
-      # - https://github.com/agnosticeng/icepq/releases/download/v0.0.8/icepq_clickhouse_udf_bundle_0.0.8_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
-      - file://../icepq/tmp/bundle.tar.gz#disable-cache=true
+      - https://github.com/agnosticeng/icepq/releases/download/v0.0.9/icepq_clickhouse_udf_bundle_0.0.9_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
     Settings:
       allow_experimental_dynamic_type: 1
       enable_named_columns_in_function_tuple: 1
@@ -35,7 +34,6 @@ Init:
 Source:
   Query: source
   StopOnEmpty: true
-  StopAfter: 1
 
 Processors:
   - Debug:
