@@ -20,6 +20,8 @@ Engine:
       output_format_parquet_parallel_encoding: 0
       max_execution_time: 3600
       s3_max_connections: 50
+      min_os_cpu_wait_time_ratio_to_throw: 100
+      max_os_cpu_wait_time_ratio_to_throw: 200
 
 Init:
   Queries:

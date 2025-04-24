@@ -24,6 +24,8 @@ Engine:
       max_bytes_before_external_group_by: 1
       max_bytes_ratio_before_external_sort: 0.01
       max_bytes_before_external_sort: 1
+      min_os_cpu_wait_time_ratio_to_throw: 100
+      max_os_cpu_wait_time_ratio_to_throw: 200
       default_temporary_table_engine: StripeLog
 
 Init:
