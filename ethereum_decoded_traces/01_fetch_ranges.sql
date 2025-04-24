@@ -45,8 +45,9 @@ as (
     select
         * except (call),
         call.value.signature::String as signature,
-        call.^value.inputs as inputs,
-        call.^value.outputs as outputs
+        call.value.fullsig::String as fullsig,
+        toJSONString(call.^value.inputs) as inputs,
+        toJSONString(call.^value.outputs) as outputs
     from q1
     where call.error is null
 )
