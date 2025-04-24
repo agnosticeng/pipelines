@@ -10,7 +10,7 @@ as (
         _file as file,
         any(_size) as size,
         any(_time) as time
-    from iceberg(table_location)
+    from iceberg(table_location, settings iceberg_use_version_hint=true)
     where _size < max_merge_output_size
     group by file
     order by time

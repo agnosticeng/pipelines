@@ -17,7 +17,7 @@ with
     (
         select 
             groupUniqArray(_file) 
-        from iceberg('{{.ICEBERG_DESTINATION_TABLE_LOCATION}}')
+        from iceberg('{{.ICEBERG_DESTINATION_TABLE_LOCATION}}', settings iceberg_use_version_hint=true)
     ) as dest_files,
 
     (

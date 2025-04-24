@@ -16,7 +16,7 @@ as (
                 address,
                 topics,
                 data
-            from iceberg('{{.ICEBERG_SOURCE_TABLE_LOCATION}}')
+            from iceberg('{{.ICEBERG_SOURCE_TABLE_LOCATION}}', settings iceberg_use_version_hint=true)
             where block_number >= {{.RANGE_START}} and block_number <= {{.RANGE_END}}
             and length(topics) > 0
         ),

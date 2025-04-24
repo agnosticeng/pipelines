@@ -17,7 +17,7 @@ as (
                     ),
                     'JSON'
                 ) as evt
-            from iceberg('{{.ICEBERG_SOURCE_TABLE_LOCATION}}')
+            from iceberg('{{.ICEBERG_SOURCE_TABLE_LOCATION}}', settings iceberg_use_version_hint=true)
             where block_number >= {{.RANGE_START}} and block_number <= {{.RANGE_END}}
             and topics[1] = keccak256('Transfer(address,address,uint256)')
             and length(topics) == 3
