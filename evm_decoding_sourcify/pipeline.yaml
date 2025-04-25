@@ -21,6 +21,7 @@ Engine:
       max_os_cpu_wait_time_ratio_to_throw: 200
       max_threads: 100
       max_download_threads: 100
+      s3_truncate_on_insert: 1
 
 Source:
   Query: source
