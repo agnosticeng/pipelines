@@ -29,6 +29,7 @@ Engine:
       
 Init:
   Queries:
+    - init_s3_config
     - init_evm_abi_decoding
     - init_start#ignore-error-codes=107 
     
