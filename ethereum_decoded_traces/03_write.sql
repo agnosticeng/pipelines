@@ -1,6 +1,6 @@
 {{define "write_parquet_file"}}
 
-insert into function s3(s3_config, filename='{{.ICEBERG_DESTINATION_TABLE_LOCATION}}/data/{{.OUTPUT_FILE}}')
+insert into function s3('{{.ICEBERG_DESTINATION_TABLE_LOCATION}}/data/{{.OUTPUT_FILE}}')
 select * from buffer_{{.RANGE_START}}_{{.RANGE_END}}
 order by {{.ORDER_BY}}
 

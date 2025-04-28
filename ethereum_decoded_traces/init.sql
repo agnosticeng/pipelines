@@ -1,7 +1,3 @@
-{{define "init_s3_config"}}
-create named collection s3_config as use_environment_credentials=1
-{{end}}
-
 {{define "init_evm_abi_decoding"}}
 
 create dictionary evm_abi_decoding (

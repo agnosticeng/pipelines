@@ -23,7 +23,7 @@ as (
                 gas_used,
                 input,
                 output
-            from iceberg(s3_config, url='{{.ICEBERG_SOURCE_TABLE_LOCATION}}', settings iceberg_use_version_hint=true)
+            from iceberg('{{.ICEBERG_SOURCE_TABLE_LOCATION}}', settings iceberg_use_version_hint=true)
             where block_number >= {{.RANGE_START}} and block_number <= {{.RANGE_END}}
             and length(input) >= 4
         ),
