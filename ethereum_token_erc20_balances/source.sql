@@ -1,7 +1,7 @@
 {{define "source"}}
 
 with
-    {{.MAX_BATCH_SIZE | default "1000"}} as max_batch_size,
+    {{.MAX_BATCH_SIZE | default "50"}} as max_batch_size,
 
     (
         select 
