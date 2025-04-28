@@ -43,7 +43,7 @@ Processors:
       ClickhouseSettings:
         remote_filesystem_read_prefetch: 1
         input_format_parquet_use_native_reader: 0
-    Workers: 8
+    Workers: 4
 
   - Sequence: {}
 
