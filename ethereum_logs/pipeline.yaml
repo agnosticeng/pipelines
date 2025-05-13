@@ -44,8 +44,6 @@ Processors:
 
   - Sequence: {}
 
-  - Debug: {}
-
   - Accumulate:
       Setup: create_buffer
       Queries:
