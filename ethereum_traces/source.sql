@@ -1,7 +1,7 @@
 {{define "source"}}
 
 with
-    {{.MAX_BATCH_SIZE | default "100"}} as max_batch_size,
+    {{.MAX_BATCH_SIZE | default "10"}} as max_batch_size,
     {{.MAX_BATCH_PER_RUN | default "1000"}} as max_batch_per_run,
 
     (

@@ -3,6 +3,9 @@ Engine:
     Bundles:
       - https://github.com/agnosticeng/clickhouse-evm/releases/download/v0.0.17/clickhouse-evm_0.0.17_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
       - https://github.com/agnosticeng/icepq/releases/download/v0.0.8/icepq_clickhouse_udf_bundle_0.0.8_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
+    Logging:
+      DiscardSources:
+        - AwsAuthSTSAssumeRoleWebIdentityCredentialsProvider
     Settings:
       send_logs_level: warning
       allow_experimental_dynamic_type: 1
@@ -19,7 +22,6 @@ Engine:
       output_format_parquet_write_bloom_filter: 1
       output_format_parquet_parallel_encoding: 0
       max_execution_time: 3600
-      s3_max_connections: 50
       min_os_cpu_wait_time_ratio_to_throw: 100
       max_os_cpu_wait_time_ratio_to_throw: 200
 
