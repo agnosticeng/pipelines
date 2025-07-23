@@ -1,0 +1,17 @@
+Engine:
+  Local: {}
+
+Source:
+  Query: source
+  PollInterval: 1s
+
+Processors:
+  - Debug: {}
+  - Apply: 
+      Queries:
+        - fetch_range
+  - Sequence: {}
+  - Apply:
+      Queries:
+        - write_json_file
+        - drop_range
