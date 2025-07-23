@@ -2,7 +2,6 @@ Engine:
   Local:
     Settings:
       send_logs_level: warning
-      use_environment_credentials: true
 
 Source:
   Query: source
