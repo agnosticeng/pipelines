@@ -1,12 +1,19 @@
-{{define "write_json_file"}}
+{{define "write_parquet_file"}}
 
-insert into function s3('{{.S3_DESTINATION_PATH}}/{{.RANGE_START}}-{{.RANGE_END}}.json')
-select * from range_{{.RANGE_START}}_{{.RANGE_END}}
+insert into function s3('{{.ICEBERG_DESTINATION_TABLE_LOCATION}}/data/{{.OUTPUT_FILE}}')
+select * from buffer_{{.RANGE_START}}_{{.RANGE_END}}
+order by {{.ORDER_BY}}
 
 {{end}}
 
-{{define "drop_range"}}
+{{define "iceberg_commit"}}
 
-drop table range_{{.RANGE_START}}_{{.RANGE_END}} sync
+select icepq_add(concat('s3:/', path('{{.ICEBERG_DESTINATION_TABLE_LOCATION}}')), ['{{.OUTPUT_FILE}}'])
+
+{{end}}
+
+{{define "drop_buffer"}}
+
+drop table buffer_{{.RANGE_START}}_{{.RANGE_END}} sync
 
 {{end}}
