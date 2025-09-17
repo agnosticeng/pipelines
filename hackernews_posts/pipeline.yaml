@@ -48,7 +48,7 @@ Processors:
         - output_merged_range_vars
       Size: buffer_size
       Teardown: rename_buffer
-      MaxWait: 10s
+      MaxWait: 120s
       MaxSize: 1000000
 
   - Apply: 
