@@ -1,7 +1,7 @@
 Engine:
   Local:
     Bundles:
-      - https://github.com/agnosticeng/icepq/releases/download/v0.1.1/icepq_clickhouse_udf_bundle_0.1.1_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
+      - https://github.com/agnosticeng/icepq/releases/download/v0.1.2/icepq_clickhouse_udf_bundle_0.1.2_{{ .PLATFORM | default "linux_amd64_v3" }}.tar.gz
     Logging:
       DiscardSources:
         - AwsAuthSTSAssumeRoleWebIdentityCredentialsProvider
